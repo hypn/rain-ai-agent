@@ -1,4 +1,6 @@
 import * as readline from "readline";
+import Anthropic from "@anthropic-ai/sdk";
+
 import { Agent } from "./agent";
 import type { GetUserMessage } from "./agent";
 
@@ -23,8 +25,13 @@ function createUserInput(): GetUserMessage {
 }
 
 async function main() {
+  const client = new Anthropic({
+    // https://platform.claude.com/settings/workspaces/default/keys
+    apiKey: "KEY_HERE"
+  });
+
   const getUserMessage = createUserInput();
-  const agent = new Agent(getUserMessage);
+  const agent = new Agent(client, getUserMessage);
 
   await agent.run();
 }
