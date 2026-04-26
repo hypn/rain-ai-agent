@@ -1,14 +1,18 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { ToolDefinition } from "./tools";
+
 export type GetUserMessage = () => Promise<[string, boolean]>;
 
 export class Agent {
 	private client: Anthropic;
 	private getUserMessage: GetUserMessage;
 	private conversation: Anthropic.Messages.MessageParam[] = [];
+	private tools: ToolDefinition[];
 
-	constructor(client: Anthropic, getUserMessage: GetUserMessage) {
+	constructor(client: Anthropic, getUserMessage: GetUserMessage, tools: ToolDefinition[]) {
 		this.client = client;
 		this.getUserMessage = getUserMessage;
+		this.tools = tools;
 	}
 
 	async run(): Promise<void> {
@@ -32,7 +36,8 @@ export class Agent {
 			const message = await this.client.messages.create({
 				max_tokens: 1024,
 				messages: this.conversation,
-				model: "claude-opus-4-7"
+				model: "claude-opus-4-7",
+  				tools: this.tools,
 			});
 
 			// add the AI's response to the conversation
@@ -43,7 +48,13 @@ export class Agent {
 
 			for (const block of message.content) {
 				if (block.type === "text") {
-					console.log("Claude: ", block.text)
+					console.log("Claude: ", block.text);
+
+				} else (block.type === "tool_use") {
+					
+
+				} else {
+					console.log("Unknown block.type received: ", block.type);
 				}
 			}
 

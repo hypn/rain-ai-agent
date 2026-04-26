@@ -3,6 +3,8 @@ import Anthropic from "@anthropic-ai/sdk";
 
 import { Agent } from "./agent";
 import type { GetUserMessage } from "./agent";
+import type { ToolDefinition } from "./tools";
+import { tools } from "./tools";
 
 function createUserInput(): GetUserMessage {
   const rl = readline.createInterface({
@@ -31,7 +33,7 @@ async function main() {
   });
 
   const getUserMessage = createUserInput();
-  const agent = new Agent(client, getUserMessage);
+  const agent = new Agent(client, getUserMessage, tools);
 
   await agent.run();
 }
