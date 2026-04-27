@@ -62,7 +62,7 @@ export class Agent {
 					// });
 					this.conversation.push({
 						role: "assistant",
-						content: message.content
+						content: block.text
 					});
 
 				} else if (block.type === "tool_use") {
@@ -77,7 +77,7 @@ export class Agent {
 					*/
 					this.conversation.push({
 						role: "assistant", 
-						content: message.content
+						content: [block]
 					});
 
 					let toolResults = await this.executeTool(block.id, block.name, block.input);
