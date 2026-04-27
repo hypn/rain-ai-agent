@@ -14,11 +14,12 @@ function createUserInput(): GetUserMessage {
 
   return () => {
     return new Promise((resolve) => {
-      rl.question("> ", (answer :string) => {
+      rl.question('\x1b[38;5;80mYou:\x1b[0m ', (answer :string) => {
         if (!answer) {
           rl.close();
           resolve(["", false]);
         } else {
+          console.log();
           resolve([answer, true]);
         }
       });

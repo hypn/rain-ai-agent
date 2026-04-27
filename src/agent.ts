@@ -1,5 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 
+const cliMd = require('cli-markdown').default;
+
 const debug = false;
 
 import type { ToolDefinition } from "./tools";
@@ -52,7 +54,7 @@ export class Agent {
 
 			for (const block of message.content) {
 				if (block.type === "text") {
-					console.log("Claude: ", block.text);
+					console.log('\x1b[38;5;208mClaude:\x1b[0m', cliMd(block.text).trim(), "\n");
 
 					// ERROR: "This model does not support assistant message prefill. The conversation must end with a user message"
 					// // add the AI's response to the conversation
