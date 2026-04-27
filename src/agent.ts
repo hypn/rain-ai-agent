@@ -1,4 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
+
+const debug = false;
+
 import type { ToolDefinition } from "./tools";
 
 export type GetUserMessage = () => Promise<[string, boolean]>;
@@ -57,6 +60,10 @@ export class Agent {
 					// 	role: "assistant",
 					// 	content: block.text
 					// });
+					this.conversation.push({
+						role: "assistant",
+						content: message.content
+					});
 
 				} else if (block.type === "tool_use") {
 					/*
@@ -73,7 +80,7 @@ export class Agent {
 						content: message.content
 					});
 
-					let toolResults = await this.executTool(block.id, block.name, block.input);
+					let toolResults = await this.executeTool(block.id, block.name, block.input);
 			  		this.conversation.push({
 						role: "user",
 						content: toolResults
@@ -82,15 +89,19 @@ export class Agent {
 
 
 				} else {
-					console.log("[DEBUG] Unknown block.type received: ", block.type);
+					if (debug) {
+						console.log("[DEBUG] Unknown block.type received: ", block.type);
+					}
 				}
 			}
 
 		}
 	}
 
-	private async executTool(id: string, name: string, input: any): Promise<any> {
-		console.log("[DEBUG] Executing tool: ", name)
+	private async executeTool(id: string, name: string, input: any): Promise<any> {
+		if (debug) {
+			console.log("[DEBUG] Executing tool: ", name)
+		}
 
 		const toolResults: Anthropic.ToolResultBlockParam[] = [];
 
@@ -105,7 +116,9 @@ export class Agent {
 					content: typeof result === "string" ? result : JSON.stringify(result),
 					is_error: false
 				});
-				console.log("[DEBUG] Tool results: ", toolResults);
+				if (debug) {
+					console.log("[DEBUG] Tool results: ", toolResults);
+				}
 
 			} else {
 				toolResults.push({
@@ -128,18 +141,5 @@ export class Agent {
 		}
 
 		return toolResults;
-
-  		// this.conversation.push({
-		// 	role: "user",
-		// 	content: toolResults
-		// });
-
-  		// // send the result back to 
-		// const message = await this.client.messages.create({
-		// 	max_tokens: 1024,
-		// 	messages: this.conversation,
-		// 	model: "claude-opus-4-7",
-		// 	tools: this.tools,
-		// });
 	}
 }
