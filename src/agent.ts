@@ -21,7 +21,6 @@ export class Agent {
 	}
 
 	async run(): Promise<void> {
-		console.log("Chatting with AI (press CTRL+C to quit)")
 		let skipUserInput = false;
 
 		while (true) {
@@ -51,6 +50,11 @@ export class Agent {
 				model: "claude-opus-4-7",
   				tools: this.tools,
 			});
+			if (debug) {
+				console.log(JSON.stringify(this.conversation));
+				console.log("-----------------");
+				console.log();
+			}
 
 			for (const block of message.content) {
 				if (block.type === "text") {
