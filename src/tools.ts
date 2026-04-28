@@ -1,11 +1,12 @@
-const { exec } = require('child_process')
+import { exec } from 'node:child_process';
+import Anthropic from "@anthropic-ai/sdk";
 
 const debug = false;
 
 export type ToolDefinition = {
 	name: string;
 	description: string;
-	input_schema: any;
+	input_schema: Anthropic.Tool.InputSchema;
 	handler: (input: any) => Promise<string>;
 };
 
@@ -16,8 +17,8 @@ export const tools: ToolDefinition[] = [
 	input_schema: {
 		type: "object",
 		properties: {
-		command: { type: "string" },
-		arguments: { type: "string" },
+			command: { type: "string" },
+			arguments: { type: "string" },
 		},
 		required: ["command"],
 	},

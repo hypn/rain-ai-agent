@@ -11,8 +11,8 @@ export class Agent {
 	private client: Anthropic;
 	private conversation: Anthropic.Messages.MessageParam[] = [];
 	private tools: ToolDefinition[];
-	private model: string
-	private modelShortName: string
+	private model: string;
+	private modelShortName: string;
 
 	constructor(apiKey: string, tools: ToolDefinition[]) {
 		this.client = new Anthropic({ apiKey: apiKey });
@@ -80,7 +80,7 @@ export class Agent {
 		}
 	}
 
-	private async handleTextResponse(block: any) {
+	private async handleTextResponse(block: Anthropic.Messages.TextBlock) {
 		// add the LLM's response to the Conversation
 		this.conversation.push({
 			role: "assistant",
@@ -91,7 +91,7 @@ export class Agent {
 		console.log('\x1b[38;5;208m' + this.modelShortName + ':\x1b[0m', cliMd(block.text).trim(), "\n");
 	}
 
-	private async handleToolUse(block: any) {
+	private async handleToolUse(block: Anthropic.Messages.ToolUseBlock) {
 		/* eg:
 			{
 				type: 'tool_use',
@@ -172,7 +172,7 @@ export class Agent {
 		return message;
 	}
 
-	private async executeTool(id: string, name: string, input: any): Promise<any> {
+	private async executeTool(id: string, name: string, input: unknown): Promise<Anthropic.ToolResultBlockParam[]> {
 		if (debug) {
 			console.log("[DEBUG] Executing tool: ", name)
 		}
