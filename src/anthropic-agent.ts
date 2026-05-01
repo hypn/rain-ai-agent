@@ -7,15 +7,23 @@ let debug = false;
 
 import type { ToolDefinition } from "./tools";
 
-export class Agent {
+export class AnthropicAgent {
+	private apiKey: string | undefined;
 	private client: Anthropic;
 	private conversation: Anthropic.Messages.MessageParam[] = [];
 	private tools: ToolDefinition[];
 	private model: string;
 	private modelShortName: string;
 
-	constructor(apiKey: string, tools: ToolDefinition[]) {
-		this.client = new Anthropic({ apiKey: apiKey });
+	constructor(tools: ToolDefinition[]) {
+		this.apiKey = process.env.ANTHROPIC_API_KEY;
+		if (!this.apiKey) {
+			console.log("Error: missing `ANTHROPIC_API_KEY` env var!");
+			console.log();
+			process.exit(1);
+		}
+
+		this.client = new Anthropic({ apiKey: this.apiKey });
 		this.tools = tools;
 		this.model = "claude-opus-4-7";
 		this.modelShortName = this.model;

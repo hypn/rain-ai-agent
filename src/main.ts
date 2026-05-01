@@ -1,8 +1,8 @@
-import { Agent } from "./agent";
+import { AnthropicAgent } from "./anthropic-agent";
+import { OpenAiAgent } from "./openai-agent";
 import { tools } from "./tools";
 
 async function main() {
-	let apiKey = "KEY_HERE";
 
 	console.log("\x1b[0;34m");
 	console.log(" ██▀███    ▄▄▄        ██▓  ███▄    █ ");
@@ -17,8 +17,23 @@ async function main() {
 	console.log("\x1b[0m\x1b[38;5;248m       (Ross's AI Noob v0.3)\x1b[0m");
 	console.log();
 
-	const agent = new Agent(apiKey, tools);
-	await agent.run();
+	let provider: string = "openai"; // LLM_PROVIDER env?
+
+	let agent;
+	if (provider === "anthropic") {
+		agent = new AnthropicAgent(tools);
+
+	} else if (provider == "openai") {
+		agent = new OpenAiAgent(tools);
+
+	} else {
+		console.log("Error: Unsupported provider! Should be \"anthropic\" or \"openai\"");
+		console.log();
+	}
+
+	if (agent) {
+		await agent.run();
+	}
 }
 
 main();
