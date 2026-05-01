@@ -32,26 +32,6 @@ type ToolResponse = {
   content: string;
 };
 
-// // https://github.com/mubashir1osmani/litellm-docs/blob/1cdd15c5b27fd3fa934ff9724070167c18160819/reasoning_content.md?plain=1#L166-L170
-// type AssistantToolUsageMessage = {
-//   role: "assistant";
-//   tool_calls: {
-//     type: "function";
-//     id: string;
-//     function: {
-//       name: string;
-//       arguments: string;
-//     };
-//   }[];
-// };
-
-// // https://github.com/mubashir1osmani/litellm-docs/blob/1cdd15c5b27fd3fa934ff9724070167c18160819/reasoning_content.md?plain=1#L171
-// type ToolUsageResponse = {
-//   role: "tool";
-//   tool_call_id: string;
-//   content: string;
-// };
-
 type OpenAiTool = {
     type: string; 
     function: {
